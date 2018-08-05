@@ -525,14 +525,14 @@ namespace wbInternal
 
         void start()
         {
-            hipDeviceSynchronize();
+            //hipDeviceSynchronize();
             QueryPerformanceCounter(&startTime);
             return;
         }
 
         void stop()
         {
-            hipDeviceSynchronize();
+            //hipDeviceSynchronize();
             QueryPerformanceCounter(&endTime);
             return;
         }
@@ -554,13 +554,13 @@ namespace wbInternal
     public:
         void start()
         {
-            hipDeviceSynchronize();
+            //hipDeviceSynchronize();
             startTime = mach_absolute_time();
         }
 
         void stop()
         {
-            hipDeviceSynchronize();
+            //hipDeviceSynchronize();
             endTime = mach_absolute_time();
         }
 
@@ -617,13 +617,13 @@ namespace wbInternal
     public:
         void start()
         {
-            hipDeviceSynchronize();
+            //hipDeviceSynchronize();
             startTime = getTime();
         }
 
         void stop()
         {
-            hipDeviceSynchronize();
+            //hipDeviceSynchronize();
             endTime = getTime();
         }
 
