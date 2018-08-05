@@ -64,8 +64,9 @@ int main(int argc, char *argv[]) {
 
 	/* parse the input arguments */
 	//@@ Insert code here
-
+	wbArg_t args = wbArg_read(argc, argv);
 	inputImageFile = wbArg_getInputFile(args, 0);
+	printf("%s\n",inputImageFile);
 
 	inputImage = wbImport(inputImageFile);
 
@@ -106,6 +107,8 @@ int main(int argc, char *argv[]) {
 	wbTime_stop(Copy, "Copying data from the GPU");
 
 	wbTime_stop(GPU, "Doing GPU Computation (memory + compute)");
+
+	//printf("adfadf\n");
 
 	wbSolution(args, outputImage);
 
