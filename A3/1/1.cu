@@ -1,20 +1,22 @@
 #include <cuda.h>
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
-
+//#include <iostream>
+//#include <bits/stdc++.h>
 #include <stdio.h>
 //#include <iostream>
 #include "wb.h"
 
-#define THREADS 16
+#define THREADS 3000
 
 
-//@@ define error checking macro here.
 __global__ void RGB2GRAY(float *inImage, float *outImage, int width, int height) {
 	int x = threadIdx.x + blockIdx.x * blockDim.x;
 	int y = threadIdx.y + blockIdx.y * blockDim.y;
-
-	if (x <= width && y <= height) {
+	
+//	std::cout<<"Outside\n";
+//	if (x < width && y < height) {
+//		std::cout<<"Inside\n";
 		int idx = x * width + y;
 
 		float r = inImage[3 * idx];
@@ -24,10 +26,11 @@ __global__ void RGB2GRAY(float *inImage, float *outImage, int width, int height)
 		outImage[idx] = (0.21*r + 0.71*g + 0.07*b);
 		//outImage[idx+1] = 0.0;
 		//outImage[idx+2] = 0.0;
-	}
+//	}
 
 }
 
+//@@ define error checking macro here.
 
 #define errCheck(stmt)                                                     \
   do {                                                                    \
@@ -88,7 +91,7 @@ int main(int argc, char *argv[]) {
 	wbTime_start(Compute, "Doing the computation on the GPU");
 	
 	dim3 blockSize(THREADS, THREADS, 1);
-	dim3 gridSize(ceil((float)imageWidth/ (float)THREADS), ceil((float)imageWidth / (float)THREADS), 1);
+	dim3 gridSize(ceil((float)imageWidth/ (float)THREADS), ceil((float)imageHeight / (float)THREADS), 1);
 
 	RGB2GRAY << <blockSize, gridSize >> > (deviceInputImageData, deviceOutputImageData, imageWidth, imageHeight);
 

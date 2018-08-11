@@ -459,7 +459,7 @@ void wbSolution(wbArg_t arg, wbImage_t image) {
     const char buf[] = "convoluted.ppm";
     wbImage_save(image, buf);  
     char* solutionFile = wbArg_getInputFile(arg, arg.argc-2);
-    std::cout<<solutionFile<<std::endl;
+//    std::cout<<solutionFile<<std::endl;
     wbImage_t solutionImage = wbImport(solutionFile);
     if (image._imageWidth != solutionImage._imageWidth) {
         std::cout << "width is incorrect: expected " << solutionImage._imageWidth << " but got " << image._imageWidth << std::endl;
