@@ -46,7 +46,7 @@ static void write_data(char *file_name, unsigned char *data,
                        unsigned int channels) {
   FILE *handle = fopen(file_name, "w");
   if (channels == 1) {
-    fprintf(handle, "P5\n");
+    fprintf(handle, "P6\n");
   } else {
     fprintf(handle, "P6\n");
   }
@@ -66,10 +66,10 @@ static void create_dataset(const int datasetNum, const int y,
   //@@ modify to create a separate directory
   // per dataset.
   // Eg.  ImageColorToGrayscale-Dataset-0, ImageColorToGrayscale-Dataset-1, ...
-  const char *dir_name =
+//  const char *dir_name =
 
   char *input_file_name  = "input.ppm";
-  char *output_file_name = "output.pbm";
+  char *output_file_name = "output.ppm";
 
   unsigned char *input_data = generate_data(y, x);
   unsigned char *output_data =

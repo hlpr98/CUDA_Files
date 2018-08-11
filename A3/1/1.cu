@@ -10,11 +10,11 @@
 
 
 //@@ define error checking macro here.
-void RGB2GRAY(float *inImage, float *outImage, int width, int height) {
+__global__ void RGB2GRAY(float *inImage, float *outImage, int width, int height) {
 	int x = threadIdx.x + blockIdx.x * blockDim.x;
 	int y = threadIdx.y + blockIdx.y * blockDim.y;
 
-	if (x < width && y < height) {
+	if (x <= width && y <= height) {
 		int idx = x * width + y;
 
 		float r = inImage[3 * idx];
@@ -22,6 +22,8 @@ void RGB2GRAY(float *inImage, float *outImage, int width, int height) {
 		float b = inImage[3 * idx + 2];
 
 		outImage[idx] = (0.21*r + 0.71*g + 0.07*b);
+		//outImage[idx+1] = 0.0;
+		//outImage[idx+2] = 0.0;
 	}
 
 }
