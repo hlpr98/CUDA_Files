@@ -732,7 +732,7 @@ namespace wbInternal
     {
         // Note that the tolerance level, e, is still an arbitrarily chosen value. Ideally, this value should scale
         // std::numeric_limits<float>::epsilon() by the number of rounding operations
-        const float e = 0.0005f;
+        const float e = 10.0005f;
         // For floating point values u and v with tolerance e:
         //   |u - v| / |u| <= e || |u - v| / |v| <= e
         // defines a 'close enough' relationship between u and v that scales for magnitude
@@ -746,7 +746,7 @@ template < typename T, typename S >
 void wbSolution(const wbArg_t args, const T& t, const S& s)
 {
     int solnItems;
-    float *soln = (float *) wbImport(wbArg_getInputFile(args, args.argc - 2), &solnItems);
+    unsigned int *soln = (unsigned int*) wbImport(wbArg_getInputFile(args, args.argc - 2), &solnItems);
 
     if (solnItems != s)
     {
@@ -764,6 +764,7 @@ void wbSolution(const wbArg_t args, const T& t, const S& s)
                 std::cout << "The solution did not match the expected result at element " << item << ". ";
                 std::cout << "Expecting " << soln[item] << " but got " << t[item] << ".\n";
                 errCnt++;
+//		exit(0);
             }
         }
 

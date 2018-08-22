@@ -1,6 +1,7 @@
 #include <cuda.h>
 #include "cuda_runtime.h"
 #include "wb.h"
+#include <bits/stdc++.h>
 //#include <cstdio>
 //#include <cstdlib>
 
@@ -19,27 +20,26 @@ inline void gpuAssert(cudaError_t code, const char *file, int line,
 	}
 }
 
-#define THREADS 512
+#define THREADS 8 
 
 __global__ void histogram(unsigned int* output, unsigned int* input, int inputLength) {
 
 	__shared__ unsigned int value[NUM_BINS];
 	unsigned int x = threadIdx.x + blockIdx.x * blockDim.x;
-	unsigned int idx = input[x];
+	if(x<inputLength){
+		unsigned int idx = input[x];
 
-	value[idx] = output[idx];
-	__syncthreads();
+		value[idx] = output[idx];
+		__syncthreads();
 
-	//if (!atomicXOR(&(value[idx]), BIN_CAP))
-	atomicAdd(&(value[idx]), 1);
-	atomicMin(&(value[idx]), BIN_CAP - 1);
+		atomicAdd(&(value[idx]), (unsigned int)1);
+		__syncthreads();
+		atomicMin(&(value[idx]), BIN_CAP);
+		__syncthreads();
 
-	__syncthreads();
-	if (value[idx] >= 0) {
 		output[idx] = value[idx];
-		value[idx] = -1;
+		__syncthreads();
 	}
-
 }
 
 
@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
 
 	wbTime_start(Generic, "Importing data and creating memory on host");
 	hostInput = (unsigned int *)wbImport(wbArg_getInputFile(args, 0), &inputLength);
-	hostBins = (unsigned int *)malloc(NUM_BINS * sizeof(unsigned int));
+	hostBins = (unsigned int *)calloc(NUM_BINS, sizeof(unsigned int));
 	wbTime_stop(Generic, "Importing data and creating memory on host");
 
 	wbLog(TRACE, "The input length is ", inputLength);
@@ -66,6 +66,7 @@ int main(int argc, char *argv[]) {
 	//@@ Allocate GPU memory here
 	cudaMalloc((void **)&deviceInput, inputLength * sizeof(unsigned int));
 	cudaMalloc((void **)&deviceBins, NUM_BINS * sizeof(unsigned int));
+	cudaMemset(deviceBins, 0, NUM_BINS);
 	CUDA_CHECK(cudaDeviceSynchronize());
 	wbTime_stop(GPU, "Allocating GPU memory.");
 
