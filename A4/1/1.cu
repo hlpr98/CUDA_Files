@@ -23,23 +23,27 @@ inline void gpuAssert(cudaError_t code, const char *file, int line,
 #define THREADS 8 
 
 __global__ void histogram(unsigned int* output, unsigned int* input, int inputLength) {
-
+	
 	__shared__ unsigned int value[NUM_BINS];
+	__shared__ int done[NUM_BINS];
 	unsigned int x = threadIdx.x + blockIdx.x * blockDim.x;
-	if(x<inputLength){
+	if(x < inputLength){
 		unsigned int idx = input[x];
-
-		value[idx] = output[idx];
+		value[idx] = 0;
+		done[idx] = 0;
 		__syncthreads();
 
-		atomicAdd(&(value[idx]), (unsigned int)1);
+		atomicAdd(value + idx, (unsigned int)1);
 		__syncthreads();
-		atomicMin(&(value[idx]), BIN_CAP);
+		atomicMin(value + idx, BIN_CAP);
 		__syncthreads();
-
-		output[idx] = value[idx];
-		__syncthreads();
+		
+		if(!atomicAdd(done + idx, 1)){
+			atomicAdd(output + idx, value[idx]);
+			atomicMin(output + idx, BIN_CAP);
+		}
 	}
+
 }
 
 

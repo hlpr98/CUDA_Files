@@ -732,7 +732,7 @@ namespace wbInternal
     {
         // Note that the tolerance level, e, is still an arbitrarily chosen value. Ideally, this value should scale
         // std::numeric_limits<float>::epsilon() by the number of rounding operations
-        const float e = 10.0005f;
+        const float e = 0.0005f;
         // For floating point values u and v with tolerance e:
         //   |u - v| / |u| <= e || |u - v| / |v| <= e
         // defines a 'close enough' relationship between u and v that scales for magnitude
